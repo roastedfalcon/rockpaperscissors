@@ -17,12 +17,10 @@ function playRound() {
     let playerSelection = this.id;
     let result = '';
     
-    //return a tie if both are the same
     if (playerSelection.toLowerCase() == computerSelection.toLowerCase() ) {
         result = "It's a tie!";
     } 
     
-    //return the outcome of the round
     else if (playerSelection.toLowerCase() == 'rock') {
         if (computerSelection == 'Paper') {
             result = "You Lose! Paper beats Rock"
@@ -69,10 +67,11 @@ function announceWinner() {
     if (cpuScore == 5 ) matchResult.textContent = 'That sucks. You are the loser.';
     document.body.appendChild(matchResult);
 
-    buttons.forEach(button => button.removeEventListener('click', playRound));
+    buttons.forEach(button => button.removeEventListener('click', playRound)); //stop playing after winner is announced
     playAgain();
 }
 
+//play again button
 function playAgain() {
     const refreshButton = document.createElement('button');
     refreshButton.textContent = 'Play Again';
