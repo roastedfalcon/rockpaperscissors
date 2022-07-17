@@ -1,6 +1,5 @@
 
-
-const computerSelection = () => {
+function getComputerSelection() {
     //generate computer's selection
     let randomChoice = Math.floor(Math.random()*3);
     switch (randomChoice) {
@@ -10,61 +9,79 @@ const computerSelection = () => {
             return 'Paper';
         case 2:
             return'Scissors';
-    }
-    
+    } 
 }
 
-function playRound(playerSelection, computerSelection) {
+function playRound() {
+    let computerSelection = getComputerSelection();
+    let playerSelection = this.id;
+    let result = '';
+    
     //return a tie if both are the same
     if (playerSelection.toLowerCase() == computerSelection.toLowerCase() ) {
-        return "It's a tie!";
+        result = "It's a tie!";
     } 
     
+    //return the outcome of the round
     else if (playerSelection.toLowerCase() == 'rock') {
         if (computerSelection == 'Paper') {
-            return "You Lose! Paper beats Rock"
+            result = "You Lose! Paper beats Rock"
         }
         if (computerSelection == 'Scissors') {
-            return "You Win! Rock beats Scissors"
+            result = "You Win! Rock beats Scissors"
         }
     } 
     else if (playerSelection.toLowerCase() == 'paper') {
             if (computerSelection == 'Scissors') {
-                return "You Lose! Scissors beats Paper"
+                result = "You Lose! Scissors beats Paper"
             }
             if (computerSelection == 'Rock') {
-                return "You Win! Paper beats Rock"
+                result = "You Win! Paper beats Rock"
             }
     } 
     else if (playerSelection.toLowerCase() == 'scissors') {
         if (computerSelection == 'Rock') {
-            return "You Lose! Rock beats Scissors"
+            result = "You Lose! Rock beats Scissors"
         }
         if (computerSelection == 'Paper') {
-            return "You Win! Scissors beats Paper"
+            result = "You Win! Scissors beats Paper"
         }
-
     }
-    return;
+    keepScore(result);
 }
 
-function game() {
-    //play a series of 5 games
-    let totalScore = 0;
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt("Rock, paper, or scissors?");
-        let roundResult = playRound(playerSelection, computerSelection());
-        console.log(roundResult);
+function keepScore(roundResult) {
+    if (roundResult.includes('You Win!')) playerScore++;
+    if (roundResult.includes('You Lose!')) cpuScore++;
 
-        if (roundResult.includes('You Win!')) totalScore++;
-        if (roundResult.includes('You Lose!')) totalScore--; 
-     }
+    const divRoundResult = document.querySelector('#roundResult');
+    divRoundResult.textContent = roundResult;
 
-    console.log(`Total Score: ${totalScore}`);
-
-    if (totalScore > 0) console.log('Congratulations! You are the winner!');
-    else if (totalScore < 0 ) console.log('RIP. You are the loser.');
-    else console.log('Match ended in a tie');
+    const runningScore = document.querySelector('#runningScore');
+    runningScore.textContent = `${playerScore} - ${cpuScore}`;
+    
+    if (playerScore == 5 || cpuScore == 5) announceWinner();
 }
 
-game();
+function announceWinner() {
+    const matchResult = document.createElement('div');
+    if (playerScore == 5) matchResult.textContent ='Congratulations! You are the winner!';
+    if (cpuScore == 5 ) matchResult.textContent = 'That sucks. You are the loser.';
+    document.body.appendChild(matchResult);
+
+    buttons.forEach(button => button.removeEventListener('click', playRound));
+    playAgain();
+}
+
+function playAgain() {
+    const refreshButton = document.createElement('button');
+    refreshButton.textContent = 'Play Again';
+    document.body.appendChild(refreshButton);
+    refreshButton.addEventListener('click', () => window.location.reload());
+}
+
+
+var playerScore = 0;
+var cpuScore = 0;
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => button.addEventListener('click', playRound));
